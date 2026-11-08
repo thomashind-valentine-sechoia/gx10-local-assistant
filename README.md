@@ -1,5 +1,17 @@
 # GX10 local Home Assistant voice assistant
 
+## The goal
+
+**A local brain for when the world goes quiet.**
+
+Most of us now lean on AI and the internet for everyday know-how: how to fix a leak, why a seedling is wilting, how to rewire a socket. But that help lives in someone else's data centre. When the internet drops, the grid wobbles, or a service disappears, it goes with it.
+
+This project is about keeping that help at home. The aim is to run the most capable AI assistant possible on small, low-power hardware you own: one that can talk to you, control your home, and carry a copy of the world's knowledge, even with no connection at all.
+
+It isn't about cutting yourself off from the modern world. When the internet is there, use it. This is the backup: a self-reliant home where, as long as you have power from your own solar and batteries, you still have an assistant and a library to help you grow food, look after your heat pump and water, and maintain and repair the house yourself.
+
+If you're dreaming of a more resilient, off-grid-capable home, this is the brain to go with it.
+
 A reproducible build journal for an ASUS GX10 / NVIDIA GB10: local home-control intents, a fast MoE language model, Parakeet speech recognition, Kokoro British speech, and optional offline Wikipedia and web search.
 
 **Snapshot: 8 November 2026 (Europe/London, GMT). Experimental; not a turnkey appliance. Local repository only; no publication or remote configured.** Licensed under the MIT Licence: see [LICENSE](LICENSE).
