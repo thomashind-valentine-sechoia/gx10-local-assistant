@@ -2,7 +2,7 @@
 
 A reproducible build journal for an ASUS GX10 / NVIDIA GB10: local home-control intents, a fast MoE language model, Parakeet speech recognition, Kokoro British speech, and optional offline Wikipedia and web search.
 
-**Snapshot: 8 November 2026 (Europe/London, GMT). Experimental; not a turnkey appliance. Local repository only; no publication or remote configured.** No licence has been selected: see [LICENSE](LICENSE).
+**Snapshot: 8 November 2026 (Europe/London, GMT). Experimental; not a turnkey appliance. Local repository only; no publication or remote configured.** Licensed under the MIT Licence: see [LICENSE](LICENSE).
 
 ## What it does
 

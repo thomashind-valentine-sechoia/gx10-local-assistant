@@ -12,4 +12,4 @@ Snapshot: 8 November 2026 (Europe/London, GMT).
 - LIMITED: full original transcript/tool logs could not be retrieved; supplied conversation plus live artifacts used.
 - PENDING: clean-machine installation, full encyclopedia verification and real Assist tool execution, deep-model measurements, end-to-end voice/device/offline acceptance.
 
-The runtime SearXNG secret remains outside this repository. Commit author identity follows the existing local Git configuration as requested; review Git metadata separately before public release. No licence has been chosen.
+The runtime SearXNG secret remains outside this repository. Commit author identity follows the existing local Git configuration as requested; review Git metadata separately before public release. This repository is licensed under the MIT Licence.

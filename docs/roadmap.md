@@ -11,7 +11,8 @@
 - [ ] Validate actual light/socket/blind devices, aliases, areas, confirmation rules and physical outcome.
 - [ ] Record final installed asset sizes, exact app versions, ASR/Kokoro model revisions and original benchmark logs.
 - [ ] Reboot recovery test; add a reliable downloader service if wanted.
-- [ ] Pick a licence, review upstream/model/data terms and attribution, scan content and author metadata, then explicitly approve any publication.
+- [x] Project licence is MIT; see [LICENSE](../LICENSE).
+- [ ] Review upstream/model/data terms and attribution, scan content and author metadata, then explicitly approve any publication.
 
 ## Safe deep-model switching
 
