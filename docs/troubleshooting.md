@@ -27,5 +27,6 @@
 - Archive absent: Kiwix container can say “running” while its wrapper waits for the verified ZIM. Check `~/kiwix/download.log` and final filename; port 8090 may not answer yet.
 - Download interrupted/rebooted: rerun `~/kiwix/download-wikipedia.sh`; `wget --continue` resumes. The detached downloader is not itself a boot service. Checksum failure intentionally prevents final rename.
 - SearXNG engine CAPTCHA: one upstream failed while other engines returned results; this is not necessarily a total outage. Check JSON output and engine errors, not just HTTP status.
+- SearXNG HTTP 200 with `results: []` is not a live lookup. Private Web Search must say there is no live evidence. Unresponsive engines, timeouts, HTTP errors and malformed bodies are unavailable, not empty matches. Offline Wikipedia Search is only an offer; the web script does not call it.
 - Assistant invents a lookup: expose all three scripts, retain Device control tool provider, append the knowledge instructions to the **system prompt**, start a new conversation, and inspect real tool results. Pasting instructions into Assist chat is not persistent configuration.
 - Validate configuration before a manual HA restart: `docker exec homeassistant python -m homeassistant --script check_config --config /config`. Back up privately first; never put that backup in this repo.
