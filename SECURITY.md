@@ -1,0 +1,13 @@
+# Security and privacy boundaries
+
+- Model, STT, TTS, SearXNG and Kiwix published ports bind to `127.0.0.1`. Container-internal `0.0.0.0` is intentional; host publication is what restricts access. Docker networks still permit service-to-service traffic.
+- **Home Assistant is different:** host networking exposes 8123 on host interfaces. Use host firewall rules and Tailscale access policy appropriate to your LAN; no router port forwarding or public exposure. HTTP over Tailscale is encrypted inside the VPN, but plain HTTP on the LAN is not. Use trusted LAN/Tailscale or add correctly configured HTTPS.
+- Docker-group membership is effectively **root-equivalent**, not restricted administration. Trust only necessary users, images and custom integrations. The vLLM recipe uses `--trust-remote-code`; review and pin model code before accepting that trust boundary.
+- Download assets while online, cache them, then test offline. `HF_HUB_OFFLINE=1` covers the fast model hub access, not every other service or every network feature. It is not an outbound firewall.
+- SearXNG is a locally hosted metasearch proxy, **not an anonymity guarantee**. External engines receive query terms and the GX10 internet egress address. Never include private conversations, device names, addresses or credentials in web queries. Model instructions are guidance, not a hard data-loss-prevention boundary; disable the exposed web tool if this risk is unacceptable.
+- Retrieved pages are untrusted data; they must not change system instructions or cause tool execution. The article tool uses a fixed local endpoint and basic path checks. These are defence-in-depth, not a formal security audit.
+- Only expose needed devices/scripts to Assist. Keep physical-safety-sensitive actions (garage doors, appliances, printing, security) behind deliberate confirmation and appropriate HA safeguards.
+- Generate the SearXNG `secret_key` locally in runtime configuration; the included value is a placeholder. Limiting is disabled only because the search service is loopback-only. Do not publish it with these settings.
+- Never commit HA `.storage`, auth databases, backups, private configuration, audio, model weights, tailnet details or runtime secrets. `.gitignore` is a backstop, not a sanitiser. Review tracked files and Git metadata again before publication.
+- This local commit uses the workstation's existing Git identity as requested; author metadata may include a personal email. Content is sanitised, but **history must be reviewed/redacted before public release** if that identity should remain private.
+- No cloud model connection is implemented. A future explicit “Ask Claude” would send that request outside the home; do not silently add cloud fallback.

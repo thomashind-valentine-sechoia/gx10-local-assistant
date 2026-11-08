@@ -1,0 +1,91 @@
+# Reconstructed reproduction template, NOT a dump of private host configuration.
+# Fast LLM is started separately with scripts/run-llm.sh.
+services:
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant@sha256:c6c1ca9931036bf3a2c4cc088d8db25dfea3b33935a5ecc83c40349462e2f69e
+    container_name: homeassistant
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Europe/London
+    volumes:
+      - ${HOME}/homeassistant:/config
+  wyoming-stt:
+    image: ghcr.io/jxlarrea/wyoming-onnx-asr-gpu@sha256:c4a8536cfc1b87aa6ee38f5ba8c5436baeb9922eb9c11e2231e2d640c25b21a5
+    container_name: wyoming-stt
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    ports:
+      - "127.0.0.1:10300:10300"
+    volumes:
+      - ${HOME}/models/onnx-asr/data:/data
+      - ${HOME}/models/onnx-asr/cache:/cache
+    command: ["--model-en", "nemo-parakeet-tdt-0.6b-v2", "--uri", "tcp://0.0.0.0:10300", "--model-dir", "/data"]
+  kokoro:
+    image: ghcr.io/remsky/kokoro-fastapi-gpu@sha256:9e215d5396edf212e008ffc0025bcd0d92f827783dda338bda1034a0f6fdabc1
+    container_name: kokoro
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    environment:
+      USE_GPU: "True"
+      DEVICE: gpu
+    ports:
+      - "127.0.0.1:8880:8880"
+    networks: [voice]
+  wyoming-tts:
+    image: ghcr.io/roryeckel/wyoming_openai@sha256:27cb450fd60f8651ef90ad3536acff70b3168fe39f2529af4e57701314385094
+    container_name: wyoming-tts
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:10200:10300"
+    environment:
+      WYOMING_URI: tcp://0.0.0.0:10300
+      WYOMING_LANGUAGES: en
+      TTS_OPENAI_URL: http://kokoro:8880/v1
+      TTS_MODELS: kokoro
+      TTS_BACKEND: KOKORO_FASTAPI
+      TTS_VOICES: bf_emma bm_george bf_isabella bm_lewis
+      TTS_STREAMING_VOICES: bf_emma bm_george bf_isabella bm_lewis
+      TTS_STREAMING_MIN_WORDS: "10"
+      TTS_STREAMING_MODELS: kokoro
+      TTS_STREAMING_MAX_CHARS: "220"
+    networks: [voice]
+  searxng:
+    image: searxng/searxng@sha256:c750ee1d859b26d3aeae51c07f6a48c3a0bfbaa9195d71a18b258862d88c4c3c
+    container_name: searxng
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8888:8080"
+    volumes:
+      - ${HOME}/searxng/config:/etc/searxng
+      - ${HOME}/searxng/data:/var/cache/searxng
+  kiwix:
+    image: ghcr.io/kiwix/kiwix-serve@sha256:e478554a9920412eeb5ce1d73f24e4b28445ebed233187cdd03c623c32be46a5
+    container_name: kiwix
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8090:8080"
+    volumes:
+      - ${HOME}/kiwix:/data:ro
+    entrypoint: ["/bin/sh"]
+    command:
+      - -c
+      - >-
+        until [ -f /data/wikipedia_en_all_maxi_2026-08.zim ]; do
+        echo "Waiting for verified Wikipedia download"; sleep 60; done;
+        exec /usr/local/bin/kiwix-serve --port=8080 --blockexternal --nodatealiases /data/wikipedia_en_all_maxi_2026-08.zim
+networks:
+  voice:
+    name: voice

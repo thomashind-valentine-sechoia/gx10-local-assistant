@@ -1,0 +1,72 @@
+[
+  {
+    "name": "ha-llm",
+    "image": "nvcr.io/nvidia/vllm:26.05.post1-py3",
+    "id": "sha256:46591c6e4a018d8d197fa246b1e3d682c907654aab4e9402302abb3e6a7dd916",
+    "digests": [
+      "nvcr.io/nvidia/vllm@sha256:94e21552f644e0c1627464ba89d2f7a4ce7442e196f72afa0bb5d7fba23cbb03"
+    ],
+    "architecture": "arm64",
+    "revision": null
+  },
+  {
+    "name": "wyoming-stt",
+    "image": "ghcr.io/jxlarrea/wyoming-onnx-asr-gpu",
+    "id": "sha256:d313f987a8b452254941f4be38a8d176a1d3ce9358d32445185511bc04f9181a",
+    "digests": [
+      "ghcr.io/jxlarrea/wyoming-onnx-asr-gpu@sha256:c4a8536cfc1b87aa6ee38f5ba8c5436baeb9922eb9c11e2231e2d640c25b21a5"
+    ],
+    "architecture": "arm64",
+    "revision": "497994bb35e505dc717d9ad1bda8a4eaeba4142c"
+  },
+  {
+    "name": "kokoro",
+    "image": "ghcr.io/remsky/kokoro-fastapi-gpu:latest",
+    "id": "sha256:65d934cdc2ea5a01909b4352fe22fd3131247fe302c27c826011c15018fb9297",
+    "digests": [
+      "ghcr.io/remsky/kokoro-fastapi-gpu@sha256:9e215d5396edf212e008ffc0025bcd0d92f827783dda338bda1034a0f6fdabc1"
+    ],
+    "architecture": "arm64",
+    "revision": "06902e7ea0f51eed396bd3d253864f44218fec81"
+  },
+  {
+    "name": "wyoming-tts",
+    "image": "ghcr.io/roryeckel/wyoming_openai:latest",
+    "id": "sha256:86950ba8478b0b467669e50174ca7c2c39d1c78a70da66d16565bf2bfcd44cdc",
+    "digests": [
+      "ghcr.io/roryeckel/wyoming_openai@sha256:27cb450fd60f8651ef90ad3536acff70b3168fe39f2529af4e57701314385094"
+    ],
+    "architecture": "arm64",
+    "revision": "4cc87ebacf9ba0c1aa560cd9651ff6f80526708c"
+  },
+  {
+    "name": "homeassistant",
+    "image": "ghcr.io/home-assistant/home-assistant:stable",
+    "id": "sha256:938424ebc5e79593a10d7093c20a008d441c4d9278fb313b99c87f3a899e6e78",
+    "digests": [
+      "ghcr.io/home-assistant/home-assistant@sha256:c6c1ca9931036bf3a2c4cc088d8db25dfea3b33935a5ecc83c40349462e2f69e"
+    ],
+    "architecture": "arm64",
+    "revision": null
+  },
+  {
+    "name": "searxng",
+    "image": "searxng/searxng:latest",
+    "id": "sha256:5f43c9916e824dc0b577dece04c955a44c6bb855b0acb1183eb1eb08012ed4e6",
+    "digests": [
+      "searxng/searxng@sha256:c750ee1d859b26d3aeae51c07f6a48c3a0bfbaa9195d71a18b258862d88c4c3c"
+    ],
+    "architecture": "arm64",
+    "revision": "ac11e14c5edf995d4d2f066bfb885a614f52a978"
+  },
+  {
+    "name": "kiwix",
+    "image": "ghcr.io/kiwix/kiwix-serve:latest",
+    "id": "sha256:4567e28726b2f108c3f80dcff650ba61c47a8008d725ba3ea3d9e07c8b4b87b4",
+    "digests": [
+      "ghcr.io/kiwix/kiwix-serve@sha256:e478554a9920412eeb5ce1d73f24e4b28445ebed233187cdd03c623c32be46a5"
+    ],
+    "architecture": "arm64",
+    "revision": null
+  }
+]
