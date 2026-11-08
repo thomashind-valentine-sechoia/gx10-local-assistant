@@ -8,7 +8,9 @@ Most of us now lean on AI and the internet for everyday know-how: how to fix a l
 
 This project is about keeping that help at home. The aim is to run the most capable AI assistant possible on small, low-power hardware you own: one that can talk to you, control your home, and carry a copy of the world's knowledge, even with no connection at all.
 
-It isn't about cutting yourself off from the modern world. When the internet is there, use it. This is the backup: a self-reliant home where, as long as you have power from your own solar and batteries, you still have an assistant and a library to help you grow food, look after your heat pump and water, and maintain and repair the house yourself.
+It isn't about cutting yourself off from the modern world. On a normal day, the local model handles the quick stuff instantly (lights, timers, everyday questions), and when a job needs real horsepower it hands off to the top-end cloud AIs. You get the best of both: local speed for the everyday, and frontier intelligence when it's worth it.
+
+The local brain is the part that never leaves. If the internet goes down or the services you rely on disappear, it carries on: as long as you have power from your own solar and batteries, you still have an assistant and a library to help you grow food, look after your heat pump and water, and maintain and repair the house yourself.
 
 If you're dreaming of a more resilient, off-grid-capable home, this is the brain to go with it.
 
