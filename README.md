@@ -63,6 +63,12 @@ All services are on the GX10. The published model/speech/knowledge ports bind to
 8. [Roadmap and acceptance checklist](docs/roadmap.md)
 9. [Evidence, provenance and reproduction gaps](docs/evidence.md)
 
+## Reports
+
+- [Larger MoE fast-model research, 8 Nov 2026](docs/reports/2026-11-08-larger-moe-fast-model-research.md)
+- [Deep model Qwen3.8-27B test, 8 Nov 2026](docs/reports/2026-11-08-deep-model-qwen3.8-27b-test.md)
+- [Ask Claude setup, 8 Nov 2026](docs/reports/2026-11-08-ask-claude-setup.md)
+
 ## Current status
 
 | Component | Snapshot status |
