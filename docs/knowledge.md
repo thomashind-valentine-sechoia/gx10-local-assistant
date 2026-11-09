@@ -83,3 +83,32 @@ Recommended additional system-prompt line:
 > When a tool returns results, answer from them rather than your own memory, and mention the source.
 
 The user's retest is **not yet confirmed**. A successful search call alone does not establish that the final spoken answer used it. Verify a fresh current-information question against the returned source and date; treat retrieved text as untrusted data, not executable instructions.
+
+## Empty web search is not live evidence
+
+The deployed package kept one instructions sentence for every `private_web_search` response: “These live results are newer than your training data…”. SearXNG can return HTTP 200 with `results: []`, including when upstream engines time out. That sentence then told the model it had live evidence.
+
+`script.private_web_search` still calls only `rest_command.private_web_search`. It does not start a second search and it does not call Offline Wikipedia. Wikipedia scripts, REST URLs, the 300-character query cap, the three-result cap and the 2,000-character snippet cap are unchanged. A nonempty result still returns the deployed instructions sentence and the same title, URL and snippet fields.
+
+| Outcome | When | What the tool says |
+|---|---|---|
+| Results | HTTP 200 and at least one result object | The existing live-results instructions, plus up to three results |
+| No match | HTTP 200, `results` is an empty list, and no unresponsive engine | No matching results and no live evidence. Offline Wikipedia Search is offered as a separate local snapshot, not as web search |
+| Unavailable | Timeout, non-200, missing response, malformed body, or an empty list caused by unresponsive engines | Unavailable, failed, timed out or malformed. No live evidence. The same Wikipedia script is offered and is not called |
+
+Checked with `python3 -m unittest tests/test_private_web_search.py`.
+
+### Reload on GX10
+
+Artifact: `configs/homeassistant/packages/local_knowledge.yaml`.
+
+SHA-256: `d087af63d381fec8ca2a1eddc3993b0931084130cea4a66c088129e2484c5696`. Recompute it after any edit. The sanitized deployed file this was based on is `cc762d1b85ea5332f13ec01a42e31593af811f576840bfdedabd43d350d90ab4`.
+
+1. Confirm the live package still has that deployed hash. If it does not, stop and diff it. Do not copy over an unexpected local edit.
+2. Copy the live file to a new timestamped path **outside** `packages/`, for example `$HOME/homeassistant/backups/`. `!include_dir_named packages` loads every YAML file in that directory. Do not leave a backup beside the package.
+3. Copy the artifact to `$HOME/homeassistant/packages/local_knowledge.yaml` (`/config/packages/local_knowledge.yaml` in the container).
+4. Validate without printing secrets: `docker exec homeassistant python -m homeassistant --script check_config --config /config`. Restore the backup if this fails.
+5. While no script is running, run Developer tools → Actions → `script.reload` with no data. The reload applies to all scripts. REST definitions are unchanged, so do not call `rest_command.reload`. Do not restart Home Assistant or the model.
+6. One real Private Web Search from Developer tools is the on-box check for a nonempty query. Do not change production URLs or the host network to fake an empty or failed response.
+
+Rollback: put the timestamped backup back, run the same config check, then `script.reload` only.
