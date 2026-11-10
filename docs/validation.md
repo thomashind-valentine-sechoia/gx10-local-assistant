@@ -1,15 +1,23 @@
 # Documentation validation
 
-Snapshot: 8 November 2026 (Europe/London, GMT).
+The checks below are what a maintainer should re-run before publishing or merging to `main`.
 
-- PASS: local files cover architecture, hardware, models, installation, phone setup, knowledge, measurements, security, troubleshooting and roadmap.
-- PASS: Docker Compose configuration parsed successfully on the destination workstation; no services deployed there.
-- PASS: both shell scripts passed `bash -n`; all Python scripts passed AST syntax checks.
-- PASS: relative Markdown links and image-lock JSON checked.
-- PASS: content scan found no real tailnet addresses/names, personal usernames, home-directory paths, email addresses, private-key blocks or common credential prefixes.
-- PASS: staged-content grep reviewed for tailnet address/name patterns and the words secret, token and key. Matches were placeholders, configuration option names, benchmark token counts, code generating a new runtime secret, or security guidance; no credential values were copied.
-- PASS: local-only Git repository, no remote; no GX10 service/settings changes.
-- LIMITED: full original transcript/tool logs could not be retrieved; supplied conversation plus live artifacts used.
-- PENDING: clean-machine installation, full encyclopedia verification and real Assist tool execution, deep-model measurements, end-to-end voice/device/offline acceptance.
+- PASS expected: relative Markdown links resolve; `docker compose config` parses; `bash -n` on the shell scripts; Python files parse.
+- PASS expected: `./scripts/check-privacy.sh` and `gitleaks dir --config .gitleaks.toml` are clean on the current tree.
+- PASS expected: no real tailnet addresses, home-directory paths, non-noreply emails, private-key blocks, or credential values in tracked files.
+- PENDING on a new machine: a clean-machine install from the README, encyclopedia verification, Assist tool execution, and end-to-end voice acceptance.
 
-The runtime SearXNG secret remains outside this repository. Commit author identity follows the existing local Git configuration as requested; review Git metadata separately before public release. This repository is licensed under the MIT Licence.
+History on `main` may still contain older documentation that predates these rules. New commits must pass the hook. See [CONTRIBUTING.md](../CONTRIBUTING.md).
+
+The runtime SearXNG secret and Home Assistant `secrets.yaml` remain outside this repository.
+
+## Speech normaliser and search-package tests
+
+From the repository root, with PyYAML and Jinja2 available for the search tests:
+
+```sh
+python3 -m unittest tests.test_private_web_search
+python3 -m unittest discover -s services/wyoming-qwen3-tts -p 'test_*.py'
+```
+
+The speak_normalize suite is 23 tests, including a Victoria sponge recipe.

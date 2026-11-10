@@ -1,12 +1,12 @@
 # Installation: fresh GX10
 
-This captures the build, not an unattended installer. Read [security](../SECURITY.md) first. Do not run the examples over the working installation without planning backups and container-name conflicts. The documentation collection itself changed no GX10 services.
+This is a detailed first-time install, not an unattended installer. Start with the [README](../README.md) and read [security](../SECURITY.md) first. Do not run the examples over an existing installation without planning backups and container-name conflicts.
 
 ## 1. Prerequisites
 
 Use ARM64 Ubuntu, a working GB10 NVIDIA driver, Docker Engine, NVIDIA Container Toolkit and Compose with GPU support. The observed versions are in [hardware](hardware.md). Install them using the vendors' supported instructions; no original host-provisioning command log was available. Validate `nvidia-smi`, `docker version` and `docker compose version`. Configure the NVIDIA container runtime as required by the toolkit. Docker-group access is root-equivalent.
 
-Place this repository on the GX10 (copy the local checkout; no public remote exists yet). From its root:
+Clone this repository onto the GX10 and copy `.env.example` to `.env`. From the repository root:
 
 ```sh
 mkdir -p "$HOME/models/hf" "$HOME/models/vllm-cache" \
@@ -49,6 +49,9 @@ Unlike the original launcher, this copy pins the observed model revision and ima
 
 ```sh
 docker compose up -d homeassistant wyoming-stt kokoro wyoming-tts
+# After the Kokoro stack is up, apply the speech-normaliser overlay:
+#   services/wyoming-tts-bridge/run-container.sh
+# Optional second voice path: build and run services/wyoming-qwen3-tts (port 10201).
 ```
 
 Allow first-run model downloads while online. The STT data/cache volumes persist; Kokoro model assets are supplied by its image/runtime. An actual disconnected restart test is still needed. For build alternatives see the upstream GB10 voice recipes, but do not assume an x86 image will run on ARM64.
@@ -59,7 +62,8 @@ Allow first-run model downloads while online. The STT data/cache volumes persist
 | Home Assistant | 8123, host interfaces | **host** |
 | Parakeet Wyoming STT | `127.0.0.1:10300` → 10300 | bridge |
 | Kokoro API | `127.0.0.1:8880` → 8880 | voice |
-| Wyoming TTS bridge | `127.0.0.1:10200` → **10300** | voice |
+| Wyoming TTS bridge (Kokoro) | `127.0.0.1:10200` → **10300** | voice |
+| Qwen3-TTS Wyoming (optional) | `127.0.0.1:10201` → 10200 | bridge |
 | SearXNG (later) | `127.0.0.1:8888` → 8080 | bridge |
 | Kiwix (later) | `127.0.0.1:8090` → 8080 | bridge |
 | Deep llama.cpp (optional) | `127.0.0.1:8080` | host process; not started here |
@@ -83,14 +87,14 @@ Review upstream code/licences before installing. The custom integration is not b
 ## 6. Home Assistant onboarding
 
 1. Open `http://<GX10_LAN_IP>:8123` on the trusted LAN, or `http://<GX10_TAILSCALE_IP>:8123` over your authorised tailnet. Create your own account and set location privately. No names, password, address or account database belongs in this repo.
-2. Settings → Devices & services → Add integration → **Wyoming Protocol**. Host `127.0.0.1`, port **10300**, for STT. Add Wyoming again with port **10200**, for TTS.
+2. Settings → Devices & services → Add integration → **Wyoming Protocol**. Host `127.0.0.1`, port **10300**, for STT. Add Wyoming again with port **10200**, for Kokoro TTS. Optionally add Wyoming a third time with port **10201** for Qwen3-TTS.
 3. Add **Local OpenAI LLM**, server type **vLLM**, base URL `http://127.0.0.1:8000/v1`, blank API key. Generic OpenAI-compatible is only a fallback if vLLM is not offered.
 4. Add/configure the conversation agent:
 
 | Setting | Value |
 |---|---|
 | Model | `qwen3.6-35b-a3b` |
-| System prompt | Keep the default HA voice-assistant template; append knowledge instructions later |
+| System prompt | Paste `configs/homeassistant/agent-prompt.txt` (exact tool names, no unasked list changes, explicit Ask Claude only) |
 | Control Home Assistant | Assist / Device control provider |
 | Parallel tool calling | **Off** (known parser issue) |
 | Temperature | **0.6** |
@@ -109,7 +113,7 @@ Settings → Voice assistants → Add assistant:
 - Conversation agent: your Local OpenAI agent.
 - Turn on **Prefer handling commands locally**. Normal supported controls should not wait for an LLM.
 - Speech-to-text: Wyoming / Parakeet, English.
-- Text-to-speech: Wyoming / Kokoro; pick `bf_emma` or `bm_george` (other installed British voices are available).
+- Text-to-speech: Wyoming / Kokoro on port 10200; pick `bf_emma` or `bm_george` (other installed British voices are available). A second pipeline may use Wyoming on port 10201 for Qwen3-TTS.
 - Save and set as preferred (star / overflow menu, depending on frontend).
 
 Test a typed general question in Assist first. Expose only needed entities to Assist; this snapshot had no verified physical-device control test. Then configure the [phone](phone.md) and [knowledge services](knowledge.md).

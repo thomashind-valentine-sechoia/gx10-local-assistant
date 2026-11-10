@@ -1,0 +1,59 @@
+title = "gx10-local-assistant privacy rules"
+# Extend the default rule set and add host/personal-detail rules.
+# Username patterns are RE2-compatible (no lookaround). The hyphen is
+# treated as a word character so the GitHub handle
+# thomashind-valentine-sechoia is not flagged.
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "non-noreply-email"
+description = "Email address that is not a GitHub noreply identity"
+regex = '''[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'''
+[[rules.allowlists]]
+regexTarget = "match"
+regexes = ['''(?i)(?:^noreply@github\.com$|@users\.noreply\.github\.com$)''']
+
+[[rules]]
+id = "home-directory-path"
+description = "Absolute /home/<username> path"
+regex = '''/home/[A-Za-z0-9._-]+'''
+[[rules.allowlists]]
+regexTarget = "match"
+regexes = ['''/home/<[A-Za-z0-9._-]+>''', '''/home/[A-Z][A-Z0-9_]*''']
+
+[[rules]]
+id = "tailscale-cgnat-ip"
+description = "Tailscale CGNAT address (100.64.0.0/10)"
+regex = '''\b100\.(?:6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.\d{1,3}\.\d{1,3}\b'''
+
+[[rules]]
+id = "tailscale-magicdns"
+description = "Tailscale MagicDNS hostname"
+regex = '''(?i)\b[\w.-]+\.ts\.net\b'''
+
+[[rules]]
+id = "local-username-halead"
+description = "Known local username: halead"
+regex = '''(?i)(?:^|[^A-Za-z0-9_-])halead(?:$|[^A-Za-z0-9_-])'''
+
+[[rules]]
+id = "local-username-sechoia"
+description = "Known local username: sechoia (lowercase; allows SECHOIA and the GitHub handle)"
+regex = '''(?:^|[^A-Za-z0-9_-])sechoia(?:$|[^A-Za-z0-9_-])'''
+
+[[rules]]
+id = "local-username-thind"
+description = "Known local username: thind"
+regex = '''(?:^|[^A-Za-z0-9_-])thind(?:$|[^A-Za-z0-9_-])'''
+
+[[allowlists]]
+description = "Meta files that document the forbidden patterns, and bytecode"
+paths = [
+  '''scripts/check-privacy\.sh''',
+  '''^\.?gitleaks\.toml$''',
+  '''CONTRIBUTING\.md''',
+  '''(^|/)__pycache__/''',
+  '''\.pyc$''',
+]

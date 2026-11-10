@@ -30,3 +30,20 @@
 - SearXNG HTTP 200 with `results: []` is not a live lookup. Private Web Search must say there is no live evidence. Unresponsive engines, timeouts, HTTP errors and malformed bodies are unavailable, not empty matches. Offline Wikipedia Search is only an offer; the web script does not call it.
 - Assistant invents a lookup: expose all three scripts, retain Device control tool provider, append the knowledge instructions to the **system prompt**, start a new conversation, and inspect real tool results. Pasting instructions into Assist chat is not persistent configuration.
 - Validate configuration before a manual HA restart: `docker exec homeassistant python -m homeassistant --script check_config --config /config`. Back up privately first; never put that backup in this repo.
+
+
+## The assistant says it cannot search, or adds a shopping-list item instead
+
+The valid web-search tool name is `script__private_web_search`. Aliases such as
+“Private Web Search” are not callable. Use the prompt in
+`configs/homeassistant/agent-prompt.txt`, which also forbids unasked list
+changes. Weather and device state should use `homeassistant__GetLiveContext`
+once those entities are exposed.
+
+## Recipes or numbered lists sound wrong (“number one” then a click)
+
+Spoken output should pass through `speak_normalize` on both TTS ports. If a
+voice is suddenly reading raw `1.` or `225g`, check that the bind mounts on
+`wyoming-tts` and `wyoming-qwen3-tts` are still present after a recreate
+(`docker inspect` → Binds) and that the unit tests still pass. Roll back only
+the affected container; see `services/wyoming-tts-bridge/ROLLBACK.md`.

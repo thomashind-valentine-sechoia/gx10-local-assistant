@@ -92,8 +92,10 @@ class PrivateWebSearchTemplateTest(unittest.TestCase):
         self.assertIn("127.0.0.1:8888/search", rest["private_web_search"]["url"])
         self.assertIn("language=en-GB", rest["private_web_search"]["url"])
         script = _web_script()
-        self.assertEqual(script["alias"], "Private Web Search")
+        self.assertEqual(script["alias"], "script__private_web_search")
         self.assertEqual(script["mode"], "parallel")
+        self.assertIn("script__private_web_search", script["description"])
+        self.assertNotIn("Private Web Search is", script["description"])
         self.assertEqual(script["max"], 3)
         self.assertEqual(list(script["fields"]), ["query"])
         self.assertEqual(

@@ -1,0 +1,5 @@
+FROM wyoming-qwen3-tts:6531f86-cu130-torch2.11.0-f0.5.4
+# faster-qwen3-tts 0.5.4 (2026-10-05) predates transformers 5.22. Pin the last 5.x before that release.
+RUN pip install --no-cache-dir "transformers==5.18.0"
+COPY patch_mimi_properties.py /tmp/patch_mimi_properties.py
+RUN python /tmp/patch_mimi_properties.py && rm /tmp/patch_mimi_properties.py || true
