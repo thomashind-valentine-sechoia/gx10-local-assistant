@@ -1,0 +1,3 @@
+FROM wyoming-qwen3-tts:6531f86-cu130-torch2.11.0-f0.5.4-tf5.18.0
+COPY patch_rope_theta.py /tmp/patch_rope_theta.py
+RUN python /tmp/patch_rope_theta.py && rm /tmp/patch_rope_theta.py

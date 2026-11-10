@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Installed via: git config --local core.hooksPath .githooks
+set -euo pipefail
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+"$REPO_ROOT/scripts/check-privacy.sh" --staged
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks protect --staged --source "$REPO_ROOT" --config "$REPO_ROOT/.gitleaks.toml" --no-banner
+fi

@@ -1,0 +1,15 @@
+# Optional: pip install pre-commit && pre-commit install
+# A built-in Git hook in .githooks/pre-commit runs the same checks
+# without requiring the pre-commit framework.
+repos:
+  - repo: local
+    hooks:
+      - id: check-privacy
+        name: check-privacy
+        entry: scripts/check-privacy.sh --staged
+        language: script
+        pass_filenames: false
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.28.0
+    hooks:
+      - id: gitleaks

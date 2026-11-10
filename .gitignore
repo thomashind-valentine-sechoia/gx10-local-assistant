@@ -29,3 +29,14 @@ cache/
 backups/
 **/.storage/
 **/settings.local.yml
+
+# Private voice material and local trial artefacts (never publish)
+**/clone-voices/
+**/private-refs/
+**/private-voice-refs/
+samples/
+*.pt
+*.pth
+*.onnx
+*.bin
+*.ckpt

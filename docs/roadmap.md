@@ -18,9 +18,9 @@
 
 Stop the fast vLLM service before loading Qwen3.8-Flash-Next; never run both at once on current memory. Build an exclusive lock/state machine, queue requests, wait for readiness, handle failure and restore the fast model after idle timeout. Coordinate restart policies so a reboot cannot auto-load competing models. Current `ha-llm` remains `unless-stopped`; documentation did not change it. Capture the existing deep launcher, llama.cpp revision, template support and model/projector hashes; measure speed, start time and round-trip swap cost before selecting defaults.
 
-## “Ask Claude” / Grok Bot: research only, not implemented
+## “Ask Claude”
 
-The earlier conversation suggested invoking the official Claude Code CLI for explicit “Hey Jarvis, ask Claude…” requests. **This is not an approved or validated integration design.** Before proceeding, verify current Anthropic subscription/authentication terms and whether this automated third-party use is permitted. Official CLI login does not by itself establish permission to wrap subscription OAuth in Home Assistant. Do not extract/reuse OAuth credentials or assume subscription usage is a supported general API. A supported API route may require separate billing. Any cloud route must be explicit opt-in, disclose what leaves the GX10, and not become silent fallback. No login, subscription change or installation was performed for this documentation task.
+An opt-in `script.ask_claude` package is in use on the GX10. It is for explicit “ask Claude” requests only, prefixes answers with “Claude says:”, and must not become a silent fallback. Keep reviewing Anthropic subscription/authentication terms for this wrapped CLI use. Do not extract or reuse OAuth credentials. A supported API route may require separate billing.
 
 No verified direct Home Assistant → Grok Bot messaging interface was established. Investigate supported interfaces rather than promising one.
 

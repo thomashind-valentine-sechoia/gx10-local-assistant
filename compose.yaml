@@ -1,5 +1,6 @@
-# Reconstructed reproduction template, NOT a dump of private host configuration.
-# Fast LLM is started separately with scripts/run-llm.sh.
+# Reproduction template. Paths come from the environment or $HOME defaults
+# (see .env.example). Compose auto-loads a sibling .env for interpolation;
+# never commit .env. Fast LLM is started separately with scripts/run-llm.sh.
 services:
   homeassistant:
     image: ghcr.io/home-assistant/home-assistant@sha256:c6c1ca9931036bf3a2c4cc088d8db25dfea3b33935a5ecc83c40349462e2f69e
@@ -7,9 +8,9 @@ services:
     restart: unless-stopped
     network_mode: host
     environment:
-      TZ: Europe/London
+      TZ: ${TZ:-Europe/London}
     volumes:
-      - ${HOME}/homeassistant:/config
+      - ${HA_CONFIG_DIR:-${HOME}/homeassistant}:/config
   wyoming-stt:
     image: ghcr.io/jxlarrea/wyoming-onnx-asr-gpu@sha256:c4a8536cfc1b87aa6ee38f5ba8c5436baeb9922eb9c11e2231e2d640c25b21a5
     container_name: wyoming-stt
@@ -24,8 +25,8 @@ services:
     ports:
       - "127.0.0.1:10300:10300"
     volumes:
-      - ${HOME}/models/onnx-asr/data:/data
-      - ${HOME}/models/onnx-asr/cache:/cache
+      - ${STT_DATA_DIR:-${HOME}/models/onnx-asr/data}:/data
+      - ${STT_CACHE_DIR:-${HOME}/models/onnx-asr/cache}:/cache
     command: ["--model-en", "nemo-parakeet-tdt-0.6b-v2", "--uri", "tcp://0.0.0.0:10300", "--model-dir", "/data"]
   kokoro:
     image: ghcr.io/remsky/kokoro-fastapi-gpu@sha256:9e215d5396edf212e008ffc0025bcd0d92f827783dda338bda1034a0f6fdabc1
@@ -61,7 +62,16 @@ services:
       TTS_STREAMING_MIN_WORDS: "10"
       TTS_STREAMING_MODELS: kokoro
       TTS_STREAMING_MAX_CHARS: "220"
+    # Optional speech-normaliser overlay (survives recreation). Uncomment
+    # after copying services/ onto the host, or use
+    # services/wyoming-tts-bridge/run-container.sh. The site-packages path
+    # is image-specific (Python 3.13 in the observed image).
+    # volumes:
+    #   - ${TTS_BRIDGE_SRC:-./services/wyoming-tts-bridge}/handler.py:/usr/local/lib/python3.13/site-packages/wyoming_openai/handler.py:ro
+    #   - ${TTS_NORM_SRC:-./services/wyoming-qwen3-tts}/speak_normalize.py:/usr/local/lib/python3.13/site-packages/speak_normalize.py:ro
     networks: [voice]
+  # wyoming-qwen3-tts is a locally built image on 127.0.0.1:10201; see
+  # services/wyoming-qwen3-tts/README.md rather than this template.
   searxng:
     image: searxng/searxng@sha256:c750ee1d859b26d3aeae51c07f6a48c3a0bfbaa9195d71a18b258862d88c4c3c
     container_name: searxng
@@ -69,8 +79,8 @@ services:
     ports:
       - "127.0.0.1:8888:8080"
     volumes:
-      - ${HOME}/searxng/config:/etc/searxng
-      - ${HOME}/searxng/data:/var/cache/searxng
+      - ${SEARXNG_CONFIG_DIR:-${HOME}/searxng/config}:/etc/searxng
+      - ${SEARXNG_DATA_DIR:-${HOME}/searxng/data}:/var/cache/searxng
   kiwix:
     image: ghcr.io/kiwix/kiwix-serve@sha256:e478554a9920412eeb5ce1d73f24e4b28445ebed233187cdd03c623c32be46a5
     container_name: kiwix
@@ -78,7 +88,7 @@ services:
     ports:
       - "127.0.0.1:8090:8080"
     volumes:
-      - ${HOME}/kiwix:/data:ro
+      - ${KIWIX_DIR:-${HOME}/kiwix}:/data:ro
     entrypoint: ["/bin/sh"]
     command:
       - -c
