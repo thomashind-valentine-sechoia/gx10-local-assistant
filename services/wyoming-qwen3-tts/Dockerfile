@@ -18,7 +18,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 ENV HF_HOME=/data/huggingface \
     PYTHONUNBUFFERED=1
 
-COPY server.py design_voices.py synth_client.py ./
+COPY server.py speak_normalize.py synth_client.py ./
 
 EXPOSE 10200
 

@@ -94,7 +94,7 @@ _MD_CODE_RE = re.compile(r"`+([^`]*)`+")
 _MD_HEADING_RE = re.compile(r"(?m)^[ \t]{0,3}#{1,6}[ \t]+")
 _MD_HR_RE = re.compile(r"(?m)^[ \t]{0,3}(?:-{3,}|\*{3,}|_{3,})[ \t]*$")
 _TABLE_PIPE_RE = re.compile(r"[ \t]*\|[ \t]*")
-_APPROX_RE = re.compile(r"\bapprox\.?", re.IGNORECASE)
+_APPROX_RE = re.compile(r"\bapprox\b\.?", re.IGNORECASE)
 _EG_RE = re.compile(r"\be\.g\.?,?", re.IGNORECASE)
 _IE_RE = re.compile(r"\bi\.e\.?,?", re.IGNORECASE)
 

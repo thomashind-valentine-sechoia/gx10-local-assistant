@@ -122,6 +122,26 @@ class FractionRangeAndMiscTests(unittest.TestCase):
             "salt and pepper, approximately 1 teaspoon, for example sea salt",
         )
 
+    def test_approx_does_not_mangle_expanded_words(self):
+        # The abbreviation must be a complete token, so already-expanded
+        # words are left alone (both TTS frontends use this normaliser).
+        self.assertEqual(
+            normalize_for_speech("Bake for approximately 20 minutes."),
+            "Bake for approximately 20 minutes.",
+        )
+        self.assertEqual(
+            normalize_for_speech("This is an approximation only."),
+            "This is an approximation only.",
+        )
+        self.assertEqual(
+            normalize_for_speech("approx 1 tsp"),
+            "approximately 1 teaspoon",
+        )
+        self.assertEqual(
+            normalize_for_speech("Approx. 200g"),
+            "approximately 200 grams",
+        )
+
 
 class MarkdownAndListTests(unittest.TestCase):
     def test_markdown_stripped(self):
